@@ -1,0 +1,83 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - strong [ref=e5]: Privacy Tracking Demo Hub
+        - generic [ref=e6]: Local-only presenter deck for cross-context tracking concepts
+      - generic [ref=e7]:
+        - button "Open Dashboard" [ref=e8] [cursor=pointer]
+        - button "Open All Demo Sites" [ref=e9] [cursor=pointer]
+        - button "Reset Demo Data" [ref=e10] [cursor=pointer]
+    - generic [ref=e12]:
+      - generic [ref=e13]: Slide 1 of 11
+      - generic [ref=e14]: demo.localhost
+    - article [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]: Section 1 of 11
+        - 'heading "Overview: Cross-context tracking in plain English" [level=2] [ref=e21]'
+        - paragraph [ref=e22]: A tracker can receive signals from multiple unrelated sites and join those events into one backend profile when the same identifier or fallback signal is available.
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: Educational simulation only
+          - paragraph [ref=e26]: This presenter deck uses fictional sites, fake identifiers, fake form data, and localhost-only services. No real ad network, Meta/Facebook pixel, analytics vendor, or external request is used.
+        - generic "Demo capabilities" [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: JavaScript tracker
+            - generic [ref=e30]: News site sends JSON events.
+          - generic [ref=e31]:
+            - generic [ref=e32]: Pixel beacon
+            - generic [ref=e33]: Weather site uses a 1x1 image-style request.
+          - generic [ref=e34]:
+            - generic [ref=e35]: sendBeacon
+            - generic [ref=e36]: Shop site uses browser beacon delivery.
+          - generic [ref=e37]:
+            - generic [ref=e38]: Fingerprinting
+            - generic [ref=e39]: Fallback reassociation after cookies split or clear.
+          - generic [ref=e40]:
+            - generic [ref=e41]: Cookie sync
+            - generic [ref=e42]: Local fabricated partner ID mapping.
+          - generic [ref=e43]:
+            - generic [ref=e44]: Consent blocking
+            - generic [ref=e45]: CMP gate can block behavioral payloads.
+          - generic [ref=e46]:
+            - generic [ref=e47]: PII risk
+            - generic [ref=e48]: Fake lead form shows risky payload design.
+      - generic [ref=e49]:
+        - link "Open Dashboard" [ref=e50] [cursor=pointer]:
+          - /url: http://dashboard.localhost/
+        - button "Open All Demo Sites" [ref=e51] [cursor=pointer]
+        - button "Reset Demo Data" [ref=e52] [cursor=pointer]
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - heading "What the presenter should do" [level=3] [ref=e55]
+          - list [ref=e56]:
+            - listitem [ref=e57]: Open the dashboard.
+            - listitem [ref=e58]: Reset demo data.
+            - listitem [ref=e59]: Explain that every site is fictional and local-only.
+        - generic [ref=e60]:
+          - heading "What the audience should notice" [level=3] [ref=e61]
+          - list [ref=e62]:
+            - listitem [ref=e63]: The dashboard starts empty.
+            - listitem [ref=e64]: The status badges show the tracking concepts that will appear during the walkthrough.
+        - generic [ref=e65]:
+          - heading "Expected Result" [level=3] [ref=e66]
+          - paragraph [ref=e67]: The audience understands that the demo is about shared backend identity, not about any one vendor or production pixel.
+        - group [ref=e68]:
+          - generic "Presenter Notes" [ref=e69] [cursor=pointer]
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - button "Previous" [ref=e72] [cursor=pointer]
+          - button "Next" [ref=e73] [cursor=pointer]
+        - generic "Slide navigation" [ref=e74]:
+          - button "Go to section 1" [ref=e75] [cursor=pointer]
+          - button "Go to section 2" [ref=e76] [cursor=pointer]
+          - button "Go to section 3" [ref=e77] [cursor=pointer]
+          - button "Go to section 4" [ref=e78] [cursor=pointer]
+          - button "Go to section 5" [ref=e79] [cursor=pointer]
+          - button "Go to section 6" [ref=e80] [cursor=pointer]
+          - button "Go to section 7" [ref=e81] [cursor=pointer]
+          - button "Go to section 8" [ref=e82] [cursor=pointer]
+          - button "Go to section 9" [ref=e83] [cursor=pointer]
+          - button "Go to section 10" [ref=e84] [cursor=pointer]
+          - button "Go to section 11" [ref=e85] [cursor=pointer]
+  - status [ref=e86]

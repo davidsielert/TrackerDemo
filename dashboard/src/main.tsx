@@ -146,9 +146,7 @@ function App() {
               <tr>
                 <th>Site</th>
                 <th>Tracking method</th>
-                <th>Request type</th>
                 <th>Visitor ID</th>
-                <th>Fingerprint hash</th>
                 <th>Event name</th>
                 <th>Consent status</th>
               </tr>
@@ -158,14 +156,12 @@ function App() {
                 <tr key={event.id} className={event.event_type === "tracking_blocked" ? "blocked" : ""}>
                   <td>{event.site_name}</td>
                   <td>{event.tracking_method}</td>
-                  <td>{event.request_type}</td>
                   <td>{event.visitor_id ? short(event.visitor_id) : "none"}</td>
-                  <td>{event.fingerprint_hash ? short(event.fingerprint_hash) : "not collected"}</td>
                   <td>{event.event_name}</td>
                   <td>{event.event_type === "tracking_blocked" ? "Blocked: no consent" : statusLabel(event)}</td>
                 </tr>
               ))}
-              {filteredEvents.length === 0 && <tr><td colSpan={7}>No events yet. Visit a demo site to begin.</td></tr>}
+              {filteredEvents.length === 0 && <tr><td colSpan={5}>No events yet. Visit a demo site to begin.</td></tr>}
             </tbody>
           </table>
         </div>
@@ -217,11 +213,11 @@ function App() {
           ) : <p className="subtle">Accepted tracking events will create a visitor profile here.</p>}
         </div>
 
-        <div className="panel">
+        <div className="panel" data-testid="same-profile-panel">
           <h2>Same Profile, Different Tracking Methods</h2>
           <p className="subtle">Different request styles can still feed one backend profile. The tracker issues demo cookies, including a third-party cookie variant where the browser allows it. If the browser partitions or blocks those cookies by top-level site, this demo uses the matching fingerprint as a fallback to canonicalize site-specific IDs back to one demo visitor ID.</p>
           {methodProfiles.map((profile) => (
-            <div className="profileMethods" key={profile.visitorId}>
+            <div className="profileMethods" data-testid="method-profile" key={profile.visitorId}>
               <b>{short(profile.visitorId)}</b>
               <MethodLine site="News" expected="JavaScript tracker" actual={profile.methods["news.localhost"]} />
               <MethodLine site="Weather" expected="Image pixel beacon" actual={profile.methods["weather.localhost"]} />
@@ -266,7 +262,7 @@ function Metric({ icon, label, value }: { icon: React.ReactNode; label: string; 
 
 function MethodLine({ site, expected, actual }: { site: string; expected: string; actual?: string }) {
   return (
-    <div className={actual ? "methodLine seen" : "methodLine"}>
+    <div className={actual ? "methodLine seen" : "methodLine"} data-testid={`method-line-${site.toLowerCase()}`}>
       <span>{site}: {expected}</span>
       <strong>{actual ? "seen" : "waiting"}</strong>
     </div>

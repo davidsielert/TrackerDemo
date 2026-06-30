@@ -266,29 +266,18 @@ export function trackerScript({ strictConsentMode }: { strictConsentMode: boolea
   }
 
   async function buildFingerprint() {
-    const canvas = document.createElement("canvas");
-    canvas.width = 220;
-    canvas.height = 40;
-    const ctx = canvas.getContext("2d");
-    let canvasSample = "";
-    if (ctx) {
-      ctx.textBaseline = "top";
-      ctx.font = "16px Arial";
-      ctx.fillStyle = "#f59e0b";
-      ctx.fillRect(0, 0, 220, 40);
-      ctx.fillStyle = "#111827";
-      ctx.fillText("privacy training fingerprint", 6, 10);
-      canvasSample = canvas.toDataURL();
-    }
+    // Keep this training fingerprint intentionally boring and deterministic.
+    // Canvas output can be randomized per top-level site by privacy features,
+    // which would obscure the cross-context linkage concept this demo teaches.
     const signals = [
+      "privacy-training-fingerprint-v2",
       navigator.userAgent,
       navigator.language,
       Intl.DateTimeFormat().resolvedOptions().timeZone,
       screen.width && screen.height ? screen.width + "x" + screen.height : "",
       navigator.platform,
       navigator.hardwareConcurrency,
-      navigator.deviceMemory || "",
-      canvasSample
+      navigator.deviceMemory || ""
     ];
     const availableSignals = signals.filter(Boolean).length;
     return {

@@ -34,6 +34,7 @@ app.patch("/api/config", (req, res) => {
 });
 
 app.get("/tracker.js", (_req, res) => {
+  res.setHeader("Cache-Control", "no-store");
   res.type("application/javascript").send(trackerScript({ strictConsentMode }));
 });
 
