@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-label="Fictional weather landscape illustration">
+  <rect width="900" height="600" fill="#bae6fd"/>
+  <circle cx="690" cy="145" r="76" fill="#facc15"/>
+  <path d="M0 450 C140 350 260 380 390 300 C520 220 650 270 900 180 L900 600 L0 600 Z" fill="#2563eb"/>
+  <path d="M0 510 C180 420 310 455 470 370 C610 296 735 338 900 280 L900 600 L0 600 Z" fill="#16a34a"/>
+  <g fill="#fff" opacity=".92">
+    <ellipse cx="230" cy="170" rx="88" ry="44"/>
+    <ellipse cx="300" cy="170" rx="72" ry="38"/>
+    <ellipse cx="265" cy="135" rx="58" ry="36"/>
+    <ellipse cx="560" cy="230" rx="75" ry="36"/>
+    <ellipse cx="620" cy="230" rx="64" ry="34"/>
+    <ellipse cx="590" cy="200" rx="48" ry="30"/>
+  </g>
+</svg>

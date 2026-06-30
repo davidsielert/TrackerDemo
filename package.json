@@ -1,0 +1,19 @@
+{
+  "name": "local-privacy-training-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "tracker",
+    "dashboard"
+  ],
+  "scripts": {
+    "dev:local": "node scripts/dev-local.mjs",
+    "sites:local": "node scripts/site-server.mjs",
+    "test": "npm --workspace tracker test",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}

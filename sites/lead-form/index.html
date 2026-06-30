@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clearpath Benefits Lead Form</title>
+    <link rel="stylesheet" href="/shared.css" />
+  </head>
+  <body>
+    <header class="siteHeader">
+      <div class="brand">Clearpath Benefits</div>
+      <nav class="nav"><span>Plans</span><span>Quotes</span><span>Support</span></nav>
+    </header>
+
+    <main class="leadShell">
+      <section class="leadIntro">
+        <span class="disclaimer">Local-only PII risk simulation</span>
+        <h1>Benefits quote request</h1>
+        <p>This fictional form uses fake example data to show how a Meta Pixel-like tag could receive personal fields if developers include them in an event payload.</p>
+        <div class="warning" data-warning hidden>Demo only: this simulates risky implementation behavior using fake data.</div>
+      </section>
+
+      <section class="leadPanel">
+        <div class="modeSwitch" role="group" aria-label="Tracking mode">
+          <button type="button" class="active" data-mode="safe">Privacy-safe mode</button>
+          <button type="button" data-mode="risky">Risky PII mode</button>
+        </div>
+
+        <form id="leadForm">
+          <label>First name<input name="first_name" autocomplete="off" value="Avery" /></label>
+          <label>Last name<input name="last_name" autocomplete="off" value="Parker" /></label>
+          <label>Email<input name="email" autocomplete="off" value="avery.parker@example.test" /></label>
+          <label>Phone<input name="phone" autocomplete="off" value="555-010-2048" /></label>
+          <label>ZIP code<input name="zip_code" autocomplete="off" value="94107" /></label>
+          <label>Plan interest
+            <select name="plan_interest">
+              <option>Family health plan</option>
+              <option>Dental and vision</option>
+              <option>Small business coverage</option>
+            </select>
+          </label>
+          <button type="submit" class="submitLead">Submit fake lead</button>
+          <p class="formStatus" data-status>CMP disabled: fake lead events can send by default. If CMP is enabled, accept tracking first.</p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      let mode = "safe";
+      const modeButtons = document.querySelectorAll("[data-mode]");
+      const warning = document.querySelector("[data-warning]");
+      const status = document.querySelector("[data-status]");
+      const form = document.querySelector("#leadForm");
+
+      modeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          mode = button.dataset.mode;
+          modeButtons.forEach((item) => item.classList.toggle("active", item === button));
+          warning.hidden = mode !== "risky";
+          status.textContent = mode === "risky"
+            ? "Risky mode will send fake form fields only after demo consent is accepted."
+            : "Privacy-safe mode sends only a generic LeadSubmitted event.";
+        });
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const fakeLead = Object.fromEntries(formData.entries());
+        const payload = mode === "risky" ? fakeLead : {};
+        const sent = await window.demoTracker?.sendLeadSubmitted(payload);
+        status.textContent = sent
+          ? `Sent ${mode === "risky" ? "risky fake PII" : "privacy-safe"} LeadSubmitted event to the local tracker.`
+          : "No lead event sent. CMP is enabled, so accept tracking first; rejected consent will never send PII.";
+      });
+
+      function loadDemoTracker(port) {
+        const trackerScript = document.createElement("script");
+        trackerScript.src = `http://tracker.localhost${port ? `:${port}` : ""}/tracker.js`;
+        trackerScript.dataset.siteName = "lead-form.localhost";
+        trackerScript.dataset.trackingMode = "javascript";
+        trackerScript.dataset.autoPageView = "false";
+        trackerScript.onerror = () => {
+          if (port !== "4000") loadDemoTracker("4000");
+        };
+        document.body.appendChild(trackerScript);
+      }
+      loadDemoTracker(location.port || "");
+    </script>
+  </body>
+</html>

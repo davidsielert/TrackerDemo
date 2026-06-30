@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Tracking Demo Hub</title>
+    <style>
+      :root {
+        color: #172033;
+        background: #eef3f8;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      main { min-height: 100vh; }
+      button, a { font: inherit; }
+      .deckTop {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 28px;
+        border-bottom: 1px solid #d8e1ee;
+        background: rgba(248, 251, 255, .94);
+        backdrop-filter: blur(10px);
+      }
+      .brand { display: grid; gap: 2px; }
+      .brand strong { font-size: 1.05rem; }
+      .brand span { color: #5d6980; font-size: .9rem; }
+      .topActions, .slideActions, .navControls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid #cdd8e8;
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: white;
+        color: #172033;
+        font-weight: 900;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .button.primary { background: #172033; border-color: #172033; color: white; }
+      .button.warn { background: #991b1b; border-color: #991b1b; color: white; }
+      .button.ghost { background: #f6f9fd; }
+      .progressWrap { display: grid; gap: 8px; padding: 18px 28px 0; }
+      .progressMeta { display: flex; justify-content: space-between; color: #5d6980; font-weight: 800; font-size: .86rem; }
+      .progressBar { height: 8px; overflow: hidden; border-radius: 999px; background: #dce5f2; }
+      .progressBar i { display: block; height: 100%; width: 0; border-radius: inherit; background: #2563eb; transition: width .2s ease; }
+      .disclaimer {
+        display: inline-flex;
+        border: 1px solid #bae6fd;
+        border-radius: 999px;
+        padding: 8px 12px;
+        background: #e0f2fe;
+        color: #075985;
+        font-size: .82rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .badgeBoard {
+        align-self: start;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding: 18px;
+        border: 1px solid #d8e1ee;
+        border-radius: 12px;
+        background: white;
+      }
+      .statusBadge {
+        display: grid;
+        gap: 4px;
+        min-height: 84px;
+        border: 1px solid #dfe7f2;
+        border-radius: 10px;
+        padding: 12px;
+        background: #f8fbff;
+      }
+      .statusBadge b { font-size: .95rem; }
+      .statusBadge span { color: #5d6980; font-size: .84rem; line-height: 1.35; }
+      .slides {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 22px 28px 60px;
+      }
+      .slide {
+        display: none;
+        min-height: 560px;
+        border: 1px solid #d8e1ee;
+        border-radius: 16px;
+        padding: 32px;
+        background:
+          linear-gradient(135deg, rgba(37, 99, 235, .07), rgba(255, 255, 255, 0) 36%),
+          white;
+        box-shadow: 0 22px 54px rgba(23, 32, 51, .10);
+      }
+      .slide.active { display: grid; gap: 24px; }
+      .slideHead { display: grid; gap: 12px; }
+      .slideNumber { color: #2563eb; font-weight: 900; text-transform: uppercase; font-size: .82rem; }
+      .slide h2 { margin: 0; font-size: 3rem; line-height: 1; letter-spacing: 0; }
+      .slideLead { max-width: 980px; color: #4f5d73; font-size: 1.22rem; line-height: 1.55; }
+      .overviewIntro {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, .92fr) minmax(320px, 1.08fr);
+      }
+      .localOnly {
+        display: grid;
+        gap: 12px;
+        align-content: start;
+        border: 1px solid #d8e1ee;
+        border-radius: 12px;
+        padding: 18px;
+        background: #f8fbff;
+      }
+      .localOnly p { margin: 0; color: #536176; line-height: 1.5; }
+      .slideGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .infoPanel {
+        border: 1px solid #e0e7f1;
+        border-radius: 12px;
+        padding: 18px;
+        background: rgba(248, 251, 255, .84);
+      }
+      .infoPanel h3 { margin: 0 0 8px; font-size: 1rem; text-transform: uppercase; color: #334155; }
+      .infoPanel p, .infoPanel li { color: #536176; line-height: 1.5; }
+      .infoPanel p { margin: 0; }
+      .infoPanel ul { margin: 0; padding-left: 20px; }
+      details.infoPanel { padding: 0; overflow: hidden; }
+      details.infoPanel summary { cursor: pointer; padding: 18px; font-weight: 900; color: #172033; }
+      details.infoPanel div { padding: 0 18px 18px; color: #536176; line-height: 1.5; }
+      .expected { border-color: #bbf7d0; background: #f0fdf4; }
+      .expected h3 { color: #166534; }
+      .notes { border-color: #fed7aa; background: #fff7ed; }
+      .notes summary { color: #9a3412; }
+      .navFooter {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 20px;
+      }
+      .slideDots { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+      .slideDots button {
+        width: 12px;
+        height: 12px;
+        border: 0;
+        border-radius: 999px;
+        padding: 0;
+        background: #b8c5d8;
+        cursor: pointer;
+      }
+      .slideDots button.active { width: 28px; background: #2563eb; }
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        z-index: 50;
+        max-width: 360px;
+        border-radius: 10px;
+        padding: 12px 14px;
+        background: #172033;
+        color: white;
+        font-weight: 800;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity .2s ease, transform .2s ease;
+      }
+      .toast.visible { opacity: 1; transform: translateY(0); }
+      @media (max-width: 900px) {
+        .deckTop, .navFooter { align-items: flex-start; flex-direction: column; }
+        .overviewIntro, .slideGrid { grid-template-columns: 1fr; }
+        .slide h2 { font-size: 2rem; }
+        .slide { min-height: auto; padding: 22px; }
+        .badgeBoard { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="deckTop">
+        <div class="brand">
+          <strong>Privacy Tracking Demo Hub</strong>
+          <span>Local-only presenter deck for cross-context tracking concepts</span>
+        </div>
+        <div class="topActions">
+          <button class="button primary" data-open-dashboard>Open Dashboard</button>
+          <button class="button" data-open-all>Open All Demo Sites</button>
+          <button class="button warn" data-reset>Reset Demo Data</button>
+        </div>
+      </header>
+
+      <div class="progressWrap">
+        <div class="progressMeta"><span data-progress-label>Slide 1 of 11</span><span>demo.localhost</span></div>
+        <div class="progressBar"><i data-progress-bar></i></div>
+      </div>
+
+      <section class="slides" aria-live="polite"></section>
+    </main>
+    <div class="toast" data-toast role="status"></div>
+
+    <script>
+      const portSuffix = location.port ? `:${location.port}` : "";
+      const urls = {
+        dashboard: `http://dashboard.localhost${portSuffix}/`,
+        demo: `http://demo.localhost${portSuffix}/`,
+        news: `http://news.localhost${portSuffix}/`,
+        weather: `http://weather.localhost${portSuffix}/`,
+        shop: `http://shop.localhost${portSuffix}/`,
+        lead: `http://lead-form.localhost${portSuffix}/`,
+        tracker: `http://tracker.localhost${portSuffix}`
+      };
+
+      const statusBadges = [
+        ["JavaScript tracker", "News site sends JSON events."],
+        ["Pixel beacon", "Weather site uses a 1x1 image-style request."],
+        ["sendBeacon", "Shop site uses browser beacon delivery."],
+        ["Fingerprinting", "Fallback reassociation after cookies split or clear."],
+        ["Cookie sync", "Local fabricated partner ID mapping."],
+        ["Consent blocking", "CMP gate can block behavioral payloads."],
+        ["PII risk", "Fake lead form shows risky payload design."]
+      ];
+
+      const slides = [
+        {
+          title: "Overview: Cross-context tracking in plain English",
+          explain: "A tracker can receive signals from multiple unrelated sites and join those events into one backend profile when the same identifier or fallback signal is available.",
+          overview: true,
+          do: ["Open the dashboard.", "Reset demo data.", "Explain that every site is fictional and local-only."],
+          notice: ["The dashboard starts empty.", "The status badges show the tracking concepts that will appear during the walkthrough."],
+          expected: "The audience understands that the demo is about shared backend identity, not about any one vendor or production pixel.",
+          notes: "Use this slide to set boundaries: no real ad networks, no real pixels, no personal data, no external calls.",
+          sites: ["dashboard"]
+        },
+        {
+          title: "JavaScript Tracker: news.localhost",
+          explain: "The news site loads a local tracker script. The script builds a demo payload and sends it to tracker.localhost with a JSON fetch request.",
+          do: ["Open News.", "Return to the dashboard event stream."],
+          notice: ["A News event appears.", "The tracking method is JavaScript tracker.", "The event includes a demo visitor ID and browser signals."],
+          expected: "Dashboard shows a news.localhost page_view with JavaScript tracker / POST fetch.",
+          notes: "Point out that this is a common tag pattern: a JavaScript library collects context and posts it to a tracker endpoint.",
+          sites: ["news", "dashboard"]
+        },
+        {
+          title: "Pixel Beacon: weather.localhost",
+          explain: "A pixel beacon can send tracking data through an image request. The browser thinks it is loading an image, but query parameters can carry event data.",
+          do: ["Open Weather.", "Return to the dashboard event stream."],
+          notice: ["A Weather event appears.", "The request type is GET image pixel.", "The same backend receives the event."],
+          expected: "Dashboard shows weather.localhost with Image pixel beacon / GET image pixel.",
+          notes: "Keep this vendor-neutral. This is a local 1x1 GIF endpoint used only to explain the transport pattern.",
+          sites: ["weather", "dashboard"]
+        },
+        {
+          title: "sendBeacon API: shop.localhost",
+          explain: "sendBeacon is designed for small background payloads. A tracker can use it to send data without blocking page navigation.",
+          do: ["Open Shop.", "Return to the dashboard event stream."],
+          notice: ["A Shop event appears.", "The request type is POST sendBeacon.", "It still feeds the same tracker backend."],
+          expected: "Dashboard shows shop.localhost with sendBeacon API / POST sendBeacon.",
+          notes: "The transport is different, but the privacy question is still about what data is sent and how it is linked.",
+          sites: ["shop", "dashboard"]
+        },
+        {
+          title: "Same Profile, Different Methods",
+          explain: "Different request styles can still become one profile when they resolve to the same demo visitor ID. Cookies are used when available; fingerprint fallback canonicalizes partitioned or changed IDs.",
+          do: ["Open News, Weather, and Shop.", "Open the dashboard panel named Same Profile, Different Tracking Methods."],
+          notice: ["One visitor profile should show all three methods as seen.", "If a browser partitions cookies, relinked_by_fingerprint can explain the fallback join."],
+          expected: "One card contains News, Weather, and Shop marked seen.",
+          notes: "This is the core slide. If this panel splits into three cards, the identity linkage demo is failing and the regression test should catch it.",
+          sites: ["news", "weather", "shop", "dashboard"]
+        },
+        {
+          title: "Fingerprinting After Cookies Are Cleared",
+          explain: "Fingerprinting is a probabilistic fallback. After cookies or localStorage are cleared, browser characteristics can still resemble a previous visit closely enough to reissue a demo ID.",
+          do: ["Clear browser storage for the demo domains.", "Revisit a demo site.", "Open the Fingerprint Demo panel."],
+          notice: ["The dashboard can mark an ID reissued by fingerprint.", "The UI labels this as probabilistic and potentially wrong."],
+          expected: "Fingerprint panel shows a matching hash and an ID reissue count after the clear-and-revisit flow.",
+          notes: "Do not describe fingerprinting as reliable identity. The point is the privacy risk created by fallback signals.",
+          sites: ["news", "dashboard"]
+        },
+        {
+          title: "Cookie Sync Simulation",
+          explain: "Cookie sync maps one system's tracker ID to another system's partner ID. This demo fabricates a local partner ID so the audience can see the concept without any partner system.",
+          do: ["Open Dashboard.", "Find Cookie Sync Simulation."],
+          notice: ["Tracker ID maps to Partner ID.", "The partner ID is a local hash, not a real third-party identifier."],
+          expected: "Dashboard shows a fabricated partner mapping after page-view events exist.",
+          notes: "Explain that real cookie sync historically helped different ad systems join their pseudonymous IDs.",
+          sites: ["dashboard"]
+        },
+        {
+          title: "Consent Blocking Before Accept",
+          explain: "When the CMP gate is enabled, behavioral events wait for an accepted choice. Rejection produces only a minimal local audit event.",
+          do: ["Open Dashboard.", "Enable CMP gate.", "Open Shop and reject tracking.", "Review the dashboard event stream."],
+          notice: ["No page URL, visitor ID, or fingerprint is sent for rejected behavioral tracking.", "The blocked event is intentionally sparse."],
+          expected: "Dashboard shows a tracking_blocked event and no behavioral page_view before acceptance.",
+          notes: "This slide separates a consent audit record from behavioral tracking payloads.",
+          sites: ["shop", "dashboard"]
+        },
+        {
+          title: "Meta Pixel-Style PII Risk Demo: lead-form.localhost",
+          explain: "Pixels and tags can receive form data when developers include it in event payloads, URL parameters, data layer variables, or automatic matching configurations.",
+          do: ["Open Lead Form.", "Submit safe mode.", "Switch to risky PII mode and submit fake data.", "Open the PII Risk Demo panel."],
+          notice: ["Safe mode sends only LeadSubmitted metadata.", "Risky mode sends fake name, email, phone, ZIP, and plan interest.", "PII fields are highlighted."],
+          expected: "Dashboard flags the risky fake lead event as High risk and marks PII fields.",
+          notes: "Use only the fake example data already in the form. Do not type real personal data.",
+          sites: ["lead", "dashboard"]
+        },
+        {
+          title: "Privacy Governance View",
+          explain: "The dashboard is the governance surface: it reveals what tags send, whether consent blocks payloads, whether PII appears, and whether IDs link across contexts.",
+          do: ["Open Dashboard.", "Review Live Event Stream, PII Risk Demo, Fingerprint Demo, and Cookie Sync Simulation."],
+          notice: ["Governance is about payload review, consent enforcement, tag inventory, and identity-linkage awareness."],
+          expected: "The audience can name which controls would reduce risk: CMP enforcement, data layer review, tag governance, and PII filtering.",
+          notes: "Tie the technical demo back to process: review data layers, approve tags, test consent mode, monitor unexpected fields.",
+          sites: ["dashboard"]
+        },
+        {
+          title: "Final Recap",
+          explain: "Tracking risk comes from what data is sent, who receives it, and how events are linked over time. Multiple transport methods can feed one profile, and governance needs to inspect all of them.",
+          do: ["Open Dashboard one last time.", "Summarize each panel.", "Reset demo data if handing off to another presenter."],
+          notice: ["Same profile linkage, fingerprint fallback, cookie sync mapping, consent blocking, and PII risk are separate but connected concepts."],
+          expected: "The audience leaves with a plain-English model of cross-context tracking and practical governance checks.",
+          notes: "Close with the local-only disclaimer and remind the audience this is intentionally simplified for training.",
+          sites: ["dashboard"]
+        }
+      ];
+
+      const slidesHost = document.querySelector(".slides");
+      const progressLabel = document.querySelector("[data-progress-label]");
+      const progressBar = document.querySelector("[data-progress-bar]");
+      let currentSlide = Number(new URLSearchParams(location.search).get("slide") || 1) - 1;
+      currentSlide = Math.min(Math.max(currentSlide, 0), slides.length - 1);
+
+      function slideButton(site) {
+        const labels = {
+          dashboard: "Open Dashboard",
+          news: "Open News",
+          weather: "Open Weather",
+          shop: "Open Shop",
+          lead: "Open Lead Form"
+        };
+        return `<a class="button primary" href="${urls[site]}" target="_blank" rel="noreferrer">${labels[site]}</a>`;
+      }
+
+      function renderSlides() {
+        slidesHost.innerHTML = slides.map((slide, index) => `
+          <article class="slide" data-slide="${index}">
+            <div class="slideHead">
+              <span class="slideNumber">Section ${index + 1} of ${slides.length}</span>
+              <h2>${slide.title}</h2>
+              <p class="slideLead">${slide.explain}</p>
+            </div>
+            ${slide.overview ? `
+              <div class="overviewIntro">
+                <section class="localOnly">
+                  <span class="disclaimer">Educational simulation only</span>
+                  <p>This presenter deck uses fictional sites, fake identifiers, fake form data, and localhost-only services. No real ad network, Meta/Facebook pixel, analytics vendor, or external request is used.</p>
+                </section>
+                <div class="badgeBoard" aria-label="Demo capabilities">
+                  ${statusBadges.map(([title, body]) => `<div class="statusBadge"><b>${title}</b><span>${body}</span></div>`).join("")}
+                </div>
+              </div>
+            ` : ""}
+            <div class="slideActions">
+              ${slide.sites.map(slideButton).join("")}
+              <button class="button" data-open-all>Open All Demo Sites</button>
+              <button class="button warn" data-reset>Reset Demo Data</button>
+            </div>
+            <div class="slideGrid">
+              <section class="infoPanel">
+                <h3>What the presenter should do</h3>
+                <ul>${slide.do.map((item) => `<li>${item}</li>`).join("")}</ul>
+              </section>
+              <section class="infoPanel">
+                <h3>What the audience should notice</h3>
+                <ul>${slide.notice.map((item) => `<li>${item}</li>`).join("")}</ul>
+              </section>
+              <section class="infoPanel expected">
+                <h3>Expected Result</h3>
+                <p>${slide.expected}</p>
+              </section>
+              <details class="infoPanel notes">
+                <summary>Presenter Notes</summary>
+                <div>${slide.notes}</div>
+              </details>
+            </div>
+            <footer class="navFooter">
+              <div class="navControls">
+                <button class="button ghost" data-prev>Previous</button>
+                <button class="button ghost" data-next>Next</button>
+              </div>
+              <div class="slideDots" aria-label="Slide navigation">
+                ${slides.map((_, dotIndex) => `<button aria-label="Go to section ${dotIndex + 1}" data-dot="${dotIndex}"></button>`).join("")}
+              </div>
+            </footer>
+          </article>
+        `).join("");
+        showSlide(currentSlide);
+      }
+
+      function showSlide(index) {
+        currentSlide = Math.min(Math.max(index, 0), slides.length - 1);
+        document.querySelectorAll(".slide").forEach((slide, slideIndex) => {
+          slide.classList.toggle("active", slideIndex === currentSlide);
+        });
+        document.querySelectorAll("[data-dot]").forEach((dot) => {
+          dot.classList.toggle("active", Number(dot.dataset.dot) === currentSlide);
+        });
+        progressLabel.textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+        progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        history.replaceState(null, "", `?slide=${currentSlide + 1}`);
+      }
+
+      function openAll() {
+        [urls.news, urls.weather, urls.shop, urls.lead].forEach((url) => window.open(url, "_blank", "noreferrer"));
+        showToast("Opened all demo sites in new tabs.");
+      }
+
+      async function resetDemo() {
+        try {
+          await fetch(`${urls.tracker}/api/events`, { method: "DELETE" });
+          await fetch(`${urls.tracker}/api/config`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cmpEnabled: false })
+          });
+          showToast("Demo data reset. CMP gate is disabled.");
+        } catch (error) {
+          showToast("Reset failed. Check that tracker.localhost is running.");
+        }
+      }
+
+      let toastTimer;
+      function showToast(message) {
+        const toast = document.querySelector("[data-toast]");
+        toast.textContent = message;
+        toast.classList.add("visible");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("visible"), 2600);
+      }
+
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("button");
+        if (!target) return;
+        if (target.matches("[data-prev]")) showSlide(currentSlide - 1);
+        if (target.matches("[data-next]")) showSlide(currentSlide + 1);
+        if (target.matches("[data-dot]")) showSlide(Number(target.dataset.dot));
+        if (target.matches("[data-open-all]")) openAll();
+        if (target.matches("[data-open-dashboard]")) window.open(urls.dashboard, "_blank", "noreferrer");
+        if (target.matches("[data-reset]")) resetDemo();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight") showSlide(currentSlide + 1);
+        if (event.key === "ArrowLeft") showSlide(currentSlide - 1);
+      });
+
+      renderSlides();
+    </script>
+  </body>
+</html>

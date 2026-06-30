@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClearSky Weather</title>
+    <link rel="stylesheet" href="/shared.css" />
+  </head>
+  <body>
+    <header class="siteHeader">
+      <div class="brand">ClearSky Weather</div>
+      <nav class="nav"><span>Today</span><span>Radar</span><span>Weekend</span><span>Alerts</span></nav>
+    </header>
+    <section class="hero">
+      <div>
+        <span class="disclaimer">Fake weather site for local privacy training</span>
+        <h1>Cool morning, bright afternoon</h1>
+        <p>This fictional forecast page helps trainers show cross-context activity: the same demo tracker is loaded here and on the news and shop sites.</p>
+      </div>
+      <div class="feature" style="background-image: url('/assets/weather.svg');"></div>
+    </section>
+    <section class="content">
+      <article class="card"><h2>72°F</h2><p>Light breeze with a comfortable dew point and dry sidewalks through the commute.</p></article>
+      <article class="card"><h2>Air quality</h2><p>Moderate pollen and good particulate readings across the metro area.</p></article>
+      <article class="card"><h2>Weekend outlook</h2><p>High clouds build Saturday, with a brief shower chance late Sunday evening.</p></article>
+    </section>
+    <script>
+      function loadDemoTracker(port) {
+        const trackerScript = document.createElement("script");
+        trackerScript.src = `http://tracker.localhost${port ? `:${port}` : ""}/tracker.js`;
+        trackerScript.dataset.siteName = "weather.localhost";
+        trackerScript.dataset.trackingMode = "pixel";
+        trackerScript.onerror = () => {
+          if (port !== "4000") loadDemoTracker("4000");
+        };
+        document.body.appendChild(trackerScript);
+      }
+      loadDemoTracker(location.port || "");
+    </script>
+  </body>
+</html>

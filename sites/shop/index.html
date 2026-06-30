@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trail & Table</title>
+    <link rel="stylesheet" href="/shared.css" />
+  </head>
+  <body>
+    <header class="siteHeader">
+      <div class="brand">Trail &amp; Table</div>
+      <nav class="nav"><span>Cookware</span><span>Packs</span><span>Camp</span><span>Sale</span></nav>
+    </header>
+    <section class="hero">
+      <div>
+        <span class="disclaimer">Fake retail site for local privacy training</span>
+        <h1>Weekend gear for small escapes</h1>
+        <p>Trail &amp; Table is a fictional shop. It demonstrates how a third-party tracker could associate commercial browsing with news and weather visits after consent.</p>
+      </div>
+      <div class="feature" style="background-image: url('/assets/shop.svg');"></div>
+    </section>
+    <section class="content">
+      <article class="card"><h2>Summit Kettle</h2><p>Compact stainless kettle for camp stoves and apartment balconies.</p><div class="price">$38</div></article>
+      <article class="card"><h2>Canvas Day Pack</h2><p>Simple weather-resistant pack with a padded laptop sleeve.</p><div class="price">$74</div></article>
+      <article class="card"><h2>Two-Person Quilt</h2><p>Soft insulated layer for road trips, cabins, and backyard movies.</p><div class="price">$96</div></article>
+    </section>
+    <script>
+      function loadDemoTracker(port) {
+        const trackerScript = document.createElement("script");
+        trackerScript.src = `http://tracker.localhost${port ? `:${port}` : ""}/tracker.js`;
+        trackerScript.dataset.siteName = "shop.localhost";
+        trackerScript.dataset.trackingMode = "beacon";
+        trackerScript.onerror = () => {
+          if (port !== "4000") loadDemoTracker("4000");
+        };
+        document.body.appendChild(trackerScript);
+      }
+      loadDemoTracker(location.port || "");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Northstar Daily</title>
+    <link rel="stylesheet" href="/shared.css" />
+  </head>
+  <body>
+    <header class="siteHeader">
+      <div class="brand">Northstar Daily</div>
+      <nav class="nav"><span>Local</span><span>Policy</span><span>Culture</span><span>Markets</span></nav>
+    </header>
+    <section class="hero">
+      <div>
+        <span class="disclaimer">Fake news site for local privacy training</span>
+        <h1>City council weighs a greener transit plan</h1>
+        <p>Northstar Daily is a fictional publication used to demonstrate how the same local tracker can observe visits across unrelated contexts after consent.</p>
+      </div>
+      <div class="feature" style="background-image: url('/assets/news.svg');"></div>
+    </section>
+    <section class="content">
+      <article class="card"><h2>Neighborhood brief</h2><p>A community garden pilot expanded to three more blocks after a strong volunteer turnout.</p></article>
+      <article class="card"><h2>Election desk</h2><p>Candidate forums continue this week with questions submitted by residents and civic groups.</p></article>
+      <article class="card"><h2>Arts calendar</h2><p>The old depot hosts an evening of student films, local food trucks, and live jazz.</p></article>
+    </section>
+    <script>
+      function loadDemoTracker(port) {
+        const trackerScript = document.createElement("script");
+        trackerScript.src = `http://tracker.localhost${port ? `:${port}` : ""}/tracker.js`;
+        trackerScript.dataset.siteName = "news.localhost";
+        trackerScript.dataset.trackingMode = "javascript";
+        trackerScript.onerror = () => {
+          if (port !== "4000") loadDemoTracker("4000");
+        };
+        document.body.appendChild(trackerScript);
+      }
+      loadDemoTracker(location.port || "");
+    </script>
+  </body>
+</html>
